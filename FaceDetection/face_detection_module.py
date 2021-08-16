@@ -37,7 +37,7 @@ def main():
     detector = FaceDetector()
 
     while True:
-        sucess, img = cap.read()
+        success, img = cap.read()
         lmList = detector.find_head_position(img)
         image = detector.find_head(img)
 

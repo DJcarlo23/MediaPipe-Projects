@@ -1,11 +1,15 @@
 import cv2
 import mediapipe as mp
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_face_mesh = mp.solutions.face_mesh
 
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 cap = cv2.VideoCapture(0)
+
+pTime = 0
+cTime = 0
 
 with mp_face_mesh.FaceMesh(
     min_detection_confidence = 0.5, 
@@ -34,6 +38,12 @@ with mp_face_mesh.FaceMesh(
                     connections = mp_face_mesh.FACE_CONNECTIONS,
                     landmark_drawing_spec = drawing_spec,
                     connection_drawing_spec = drawing_spec)
+
+        cTime = time.time()
+        fps = 1/(cTime-pTime)
+        pTime = cTime
+
+        cv2.putText(image, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255,0,255), 3)
         
         cv2.imshow("MediaPipe FaceMesh", image)
         if cv2.waitKey(5) & 0xFF == 27:
