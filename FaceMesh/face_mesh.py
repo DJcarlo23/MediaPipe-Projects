@@ -14,7 +14,7 @@ cTime = 0
 with mp_face_mesh.FaceMesh(
     min_detection_confidence = 0.5, 
     min_tracking_confidence = 0.5,
-    max_num_faces = 1
+    max_num_faces = 2
 ) as face_mesh:
     while cap.isOpened():
         success, image = cap.read()

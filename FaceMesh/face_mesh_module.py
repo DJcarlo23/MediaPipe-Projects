@@ -12,19 +12,19 @@ class FaceMesh():
         self.mp_face_mesh = mp.solutions.face_mesh
 
     def find_landmarks(self, img):
-        face_landmarks = self.mp_face_mesh.FaceMesh(
+        face_mesh = self.mp_face_mesh.FaceMesh(
             min_detection_confidence = self.min_det_conf,
             min_tracking_confidence = self.min_track_conf,
             max_num_faces = self.max_num_faces
         )
 
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = face_landmarks.process(image)
+        results = face_mesh.process(image)
 
         return results.multi_face_landmarks
     
     def face_mesh(self, img):
-        face_landmarks = self.mp_face_mesh.FaceMesh(
+        face_mesh = self.mp_face_mesh.FaceMesh(
             min_detection_confidence = self.min_det_conf,
             min_tracking_confidence = self.min_track_conf,
             max_num_faces = self.max_num_faces
@@ -32,10 +32,12 @@ class FaceMesh():
 
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
-        results = face_landmarks.process(image)
+        results = face_mesh.process(image)
 
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
@@ -43,13 +45,10 @@ class FaceMesh():
                     image = image,
                     landmark_list = face_landmarks,
                     connections = self.mp_face_mesh.FACE_CONNECTIONS,
-                    landmark_drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1),
-                    connection_drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1))
+                    landmark_drawing_spec = drawing_spec,
+                    connection_drawing_spec = drawing_spec)
 
         return image
-
-
-
 
 def main():
     cap = cv2.VideoCapture(0)
