@@ -10,6 +10,7 @@ class FaceMesh():
 
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_face_mesh = mp.solutions.face_mesh
+        
         self.face_mesh_fun = self.mp_face_mesh.FaceMesh(
             min_detection_confidence = self.min_det_conf,
             min_tracking_confidence = self.min_track_conf,
