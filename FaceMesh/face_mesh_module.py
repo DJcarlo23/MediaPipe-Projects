@@ -10,29 +10,22 @@ class FaceMesh():
 
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_face_mesh = mp.solutions.face_mesh
-
-    def find_landmarks(self, img):
-        face_mesh = self.mp_face_mesh.FaceMesh(
+        self.face_mesh_fun = self.mp_face_mesh.FaceMesh(
             min_detection_confidence = self.min_det_conf,
             min_tracking_confidence = self.min_track_conf,
             max_num_faces = self.max_num_faces
         )
 
+    def find_landmarks(self, img):
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = face_mesh.process(image)
+        results = self.face_mesh_fun.process(image)
 
         return results.multi_face_landmarks
     
     def face_mesh(self, img):
-        face_mesh = self.mp_face_mesh.FaceMesh(
-            min_detection_confidence = self.min_det_conf,
-            min_tracking_confidence = self.min_track_conf,
-            max_num_faces = self.max_num_faces
-        )
-
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
-        results = face_mesh.process(image)
+        results = self.face_mesh_fun.process(image)
 
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
