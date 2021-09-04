@@ -3,6 +3,20 @@ import mediapipe as mp
 import time
 
 class PoseEstimation():
+    """Class provides tools to work with mediapipe pose estimation
+
+    Attributes:
+    min_def_conf : float
+        minimum detection confidence
+    min_track_conf : float
+        minimum tracking confidance
+    
+    Method:
+    find_landmarks : list
+        return landmarks position
+    pose_estimation : cv2 image
+        return image with the landmarks
+    """
     def __init__(self, min_det_conf=0.5, min_track_conf=0.5):
         self.min_det_conf = min_det_conf
         self.min_track_conf = min_track_conf
@@ -17,12 +31,32 @@ class PoseEstimation():
         )
 
     def find_landmarks(self, img):
+        """Return list of the landmarks on the given image
+
+        Keyword arguments:
+        img -- the image of the person
+
+        Return:
+        lmList -- list of the landmarks
+        
+        """
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = self.mp_pose_fun.process(image)
 
-        return results.pose_landmarks
+        lmList = results.pose_landmarks
+
+        return lmList
 
     def pose_estimation(self, img):
+        """Return person image with the landmarks on it
+
+        Keyword arguments:
+        img -- the image of the face
+
+        Return:
+        image -- image of the face with mesh
+        
+        """
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
         results = self.mp_pose_fun.process(image)
@@ -35,10 +69,7 @@ class PoseEstimation():
             results.pose_landmarks,
             self.mp_pose.POSE_CONNECTIONS
         )
-
         return image
-
-
 
 def main():
     cap = cv2.VideoCapture(0)

@@ -3,6 +3,22 @@ import mediapipe as mp
 import time
 
 class FaceMesh():
+    """Class provides tools to work with mediapipe face mesh
+
+    Attributes:
+    min_det_conf : float
+        minimum detection confidence
+    min_track_conf : float
+        minimum tracking confidance
+    max_num_faces : int
+        maximum number of faces which our program will be detecting
+
+    Methods:
+    find_landmarks : list
+        return landmarks position 
+    face_mesh : cv2 image
+        return image with the landmarks
+    """
     def __init__(self, min_det_conf=0.5, min_track_conf=0.5, max_num_faces=1):
         self.min_det_conf = min_det_conf
         self.min_track_conf = min_track_conf
@@ -18,12 +34,31 @@ class FaceMesh():
         )
 
     def find_landmarks(self, img):
+        """Return list of the landmarks on the given image
+
+        Keyword arguments:
+        img -- the image of the face
+
+        Return:
+        lmList -- list of the landmarks
+        
+        """
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = self.face_mesh_fun.process(image)
+        lmList = results.multi_face_landmarks
 
-        return results.multi_face_landmarks
+        return lmList
     
     def face_mesh(self, img):
+        """Return face image with the mesh on it
+
+        Keyword arguments:
+        img -- the image of the face
+
+        Return:
+        image -- image of the face with mesh
+        
+        """
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
         results = self.face_mesh_fun.process(image)

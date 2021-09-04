@@ -8,6 +8,7 @@ mp_hands = mp.solutions.hands
 
 IMAGE_FILES = []
 
+# Find images and put them into IMAGE_FILES list
 path = 'D:/Data/Hand Language Signs/asl_alphabet_train/asl_alphabet_train/K'
 files = os.listdir(path)
 for f in files:
@@ -16,7 +17,7 @@ for f in files:
 with mp_hands.Hands(
     static_image_mode = True,
     max_num_hands = 2,
-    min_detection_confidence = 0.5
+    min_detection_confidence = 0.7 # default 0.5
 ) as hands:
     for idx, file in enumerate(IMAGE_FILES):
         # Read an image, flip it around y-axis for correct handedness output
@@ -28,7 +29,7 @@ with mp_hands.Hands(
         # print("Handedness:", results.multi_handedness)
         if not results.multi_hand_landmarks:
             continue
-
+        
         image_height, image_width, _ = image.shape
         annotated_image = image.copy()
         for hand_landmarks in results.multi_hand_landmarks:
@@ -44,5 +45,6 @@ with mp_hands.Hands(
                 hand_landmarks,
                 mp_hands.HAND_CONNECTIONS,
             )
-
+            
+            # Save new file in given place
             cv2.imwrite('D:/Data\Hand Language Signs/Signs tracked by MediaPipe/annotated_image' + str(idx) + '.png', cv2.flip(annotated_image, 1))
